@@ -5,11 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
   checkPageButton.addEventListener('click', function() {
 
     chrome.tabs.getSelected(null, function(tab) {
-      alert(tab.url)
-      chrome.storage.local.set({'URL': tab.url}, function() {
+      //alert(tab.url)
+      chrome.storage.sync.set({'URL': tab.url}, function() {
           // Notify that we saved.
          // message('Settings saved');
           alert('Settings saved');
+          text_area.innerHTML = tab.url;
           //google tracking here
         });
     });
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   //Storage
-  chrome.storage.local.get("URL", function(result){
+  chrome.storage.sync.get("URL", function(result){
     if(result.URL!=undefined){
       text_area.innerHTML = result.URL;
     }else{
@@ -25,6 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     }); 
 
+  //Can be used if listener needed
+
+  // chrome.storage.onChanged.addListener(function(changes, namespace) {
+  //       for (var key in changes) {
+  //         var storageChange = changes[key];
+  //         alert(storageChange.URL);
+  //       }
+  //     });
 
 
 }, false);
