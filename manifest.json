@@ -11,6 +11,6 @@
    "default_title": "Click to save url"
   },
   "permissions": [
-   "activeTab"
+   "activeTab","storage"       
    ]
 }
