@@ -3,14 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
   var addItemButton = document.getElementById('addItemButton');
   var textItemInput = document.getElementById('textItemInput');
 
+  //var chromeStorage = 'list2';
   var textList = document.getElementById('textList');
 
   var textsList = new Array();
 
-  chrome.storage.sync.get(['list1'], function (result) {
+  chrome.storage.local.get(['list'], function (result) {
 
-      if(result.list1 !=undefined){
-            textsList = result.list1;
+      if(result.list !=undefined){
+            textsList = result.list;
             for (let key in textsList)
             {
                 addItem(textsList[key]);
@@ -24,15 +25,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if(inputValue == ''){
       chrome.tabs.getSelected(null, function(tab) {
         addItem(tab.url);
-        textsList.push(tab.url)
-        chrome.storage.sync.set({'list1': textsList}, function() {
+        textsList.push(tab.url);
+        chrome.storage.local.set({'list': textsList}, function() {
           });
       });
 
     }else{
         addItem(inputValue);
         textsList.push(inputValue);
-        chrome.storage.sync.set({'list1': textsList}, function() {
+        chrome.storage.local.set({'list': textsList}, function() {
         });
     }
 
@@ -40,17 +41,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   function addItem(value){
-    var div = document.createElement("DIV");          
+    var li = document.createElement("LI");          
     var para = document.createElement("P");    
     var deleteButton = document.createElement("BUTTON");                   // Create a <p> node
     var t = document.createTextNode(value);      // Create a text node
     
-    para.style.width="50px";
+    deleteButton.className = "delete";
+    para.style.width="500px";
+    $(".delete").click(function () {
+                var index = $(this).index(".delete");
+                alert(index);
+                var li = this.parentElement;
+                li.style.display = "none";
+                removeItem(index);  
+                $(".delete").eq(index).remove();
+            })
+
     para.appendChild(t); 
-    div.appendChild(para);
-    div.appendChild(deleteButton);
-    textList.appendChild(div);
+    li.appendChild(para);
+    li.appendChild(deleteButton);
+    textList.appendChild(li);
   }
+
+  function removeItem(itemIndex) {
+            console.log("removeitem");
+            
+            chrome.storage.local.get(['list'], function (result) {
+                textsList = result.list;
+                textsList.splice(itemIndex, 1);
+                console.log("new list", textsList);
+                chrome.storage.local.set({
+                    'list': textsList
+                })
+
+            })
+
+        }
   //Storage
   // chrome.storage.sync.get("list1", function(result){
   //   if(result.URL!=undefined){
