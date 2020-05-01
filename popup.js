@@ -8,16 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var textsList = new Array();
 
-  chrome.storage.local.get(['list'], function (result) {
+  function getList(){
+    chrome.storage.local.get(['list'], function (result) {
 
-      if(result.list !=undefined){
-            textsList = result.list;
-            for (let key in textsList)
-            {
-                addItem(textsList[key]);
-            }
-      }
-  })
+        if(result.list !=undefined){
+              textsList = result.list;
+              for (let key in textsList)
+              {
+                  addItem(textsList[key]);
+              }
+        }
+    })
+  }
+  getList()
 
   addItemButton.addEventListener('click', function() {
 
@@ -48,20 +51,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     deleteButton.className = "delete";
     para.style.width="500px";
+
+    para.appendChild(t); 
+    li.appendChild(para);
+    li.appendChild(deleteButton);
+    textList.appendChild(li); 
+
     $(".delete").click(function () {
                 var index = $(this).index(".delete");
-                alert(index);
+                //alert(index);
                 var li = this.parentElement;
                 li.style.display = "none";
                 removeItem(index);  
                 $(".delete").eq(index).remove();
             })
-
-    para.appendChild(t); 
-    li.appendChild(para);
-    li.appendChild(deleteButton);
-    textList.appendChild(li);
-  }
+    }
 
   function removeItem(itemIndex) {
             console.log("removeitem");
