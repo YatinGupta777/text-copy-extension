@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var textItemInput = document.getElementById('textItemInput');
 
   //var chromeStorage = 'list2';
-  var textList = document.getElementById('textList');
+  var elementsList = document.getElementById('elementsList');
 
   var textsList = new Array();
 
@@ -43,29 +43,41 @@ document.addEventListener('DOMContentLoaded', function() {
   }, false);
 
 
-  function addItem(value){
-    var li = document.createElement("LI");          
-    var para = document.createElement("P");    
-    var deleteButton = document.createElement("BUTTON");                   // Create a <p> node
-    var t = document.createTextNode(value);      // Create a text node
+  // function addItem(value){
+  //   var li = document.createElement("LI");          
+  //   var para = document.createElement("P");    
+  //   var deleteButton = document.createElement("BUTTON");                   // Create a <p> node
+  //   var t = document.createTextNode(value);      // Create a text node
     
-    deleteButton.className = "delete";
-    para.style.width="500px";
+  //   deleteButton.className = "delete";
 
-    para.appendChild(t); 
-    li.appendChild(para);
-    li.appendChild(deleteButton);
-    textList.appendChild(li); 
+  //   para.appendChild(t); 
+  //   li.appendChild(para);
+  //   li.appendChild(deleteButton);
+  //   elementsList.appendChild(li); 
 
-    $(".delete").click(function () {
-                var index = $(this).index(".delete");
-                //alert(index);
-                var li = this.parentElement;
-                li.style.display = "none";
-                removeItem(index);  
-                $(".delete").eq(index).remove();
-            })
-    }
+  //   $(deleteButton).click(function () {
+  //               var index = $(this).index(".delete");
+  //               alert(index);
+  //               var li = this.parentElement;
+  //               li.style.display = "none";
+  //               removeItem(index);  //This function just removes it from chrome local storage
+  //               $(".delete").eq(index).remove();
+  //           })
+  //   }
+
+function addItem(value) { 
+  $(elementsList).append(`<li><p>${value}</p><button class="delete"></button></li>`);
+}
+
+jQuery($ => {
+  $(elementsList).on('click', '.delete', function() {
+    let $button = $(this);
+    removeItem($button.index('.delete'));
+    $button.closest('li').remove();
+  });
+});
+
 
   function removeItem(itemIndex) {
             console.log("removeitem");
@@ -79,8 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
 
             })
-
-        }
+    }
   //Storage
   // chrome.storage.sync.get("list1", function(result){
   //   if(result.URL!=undefined){
